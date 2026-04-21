@@ -1,5 +1,6 @@
 package com.example.agent;
 
+import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.service.AiServices;
 
@@ -11,22 +12,21 @@ import java.util.Scanner;
 public class TranslationAgentDemo {
 
     public static void main(String[] args) {
-        String apiKey = System.getenv("OPENAI_API_KEY");
-        if (apiKey == null || apiKey.isBlank()) {
-            throw new IllegalStateException("请先设置环境变量 OPENAI_API_KEY");
-        }
+        ModelConfig config = ConfigLoader.load(args);
 
-        OpenAiChatModel model = OpenAiChatModel.builder()
-                .apiKey(apiKey)
-                .modelName("gpt-4o-mini")
-                .temperature(0.0)
+        ChatLanguageModel model = OpenAiChatModel.builder()
+                .baseUrl(config.baseUrl())
+                .apiKey(config.apiKey())
+                .modelName(config.modelName())
+                .temperature(config.temperature())
                 .build();
 
         LanguageTranslationAgent agent = AiServices.builder(LanguageTranslationAgent.class)
                 .chatLanguageModel(model)
                 .build();
 
-        System.out.println("=== Language Detection + English Translation Agent Demo ===");
+        System.out.println("=== Generic LLM Translation Agent Demo ===");
+        System.out.println("Model: " + config.modelName());
         System.out.println("请输入任意语言文本（输入 exit 退出）：");
 
         try (Scanner scanner = new Scanner(System.in)) {
