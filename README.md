@@ -1,9 +1,11 @@
-# Java + Maven + LangChain4j 智能翻译 Agent Demo
+# Java + Maven + LangChain4j 智能 Agent Demo
 
-这个 Demo 实现了你要求的两个核心功能：
+本项目现在包含两个 Agent Demo：
 
-1. 自动识别用户输入语言。
-2. 将输入转换为英文（若输入本身是英文，则不翻译、原样返回）。
+1. **翻译 Agent**：自动识别输入语言，并将输入转换成英文（若原文是英文则保持原样）。
+2. **通用对话 Agent**：支持多轮对话，具备联网工具与本地文件读取能力。
+
+> 两个 Demo 都支持通过配置文件自定义模型（OpenAI-Compatible 协议）。
 
 ## 技术栈
 
@@ -15,10 +17,13 @@
 
 ```text
 src/main/java/com/example/agent/
-├── TranslationAgentDemo.java       # 启动入口（命令行交互）
-├── LanguageTranslationAgent.java   # Agent接口 + 系统提示词
-├── TranslationResult.java          # 结构化结果对象
-├── ConfigLoader.java               # 配置文件读取
+├── TranslationAgentDemo.java       # 翻译 Agent 入口
+├── ChatAgentDemo.java              # 通用对话 Agent 入口
+├── LanguageTranslationAgent.java   # 翻译 Agent 接口
+├── GeneralAssistantAgent.java      # 通用对话 Agent 接口
+├── AgentTools.java                 # 联网与文件工具
+├── TranslationResult.java          # 翻译结构化结果
+├── ConfigLoader.java               # 配置读取
 └── ModelConfig.java                # 模型配置对象
 
 src/main/resources/
@@ -42,11 +47,11 @@ model.name=gpt-4o-mini
 model.temperature=0.0
 ```
 
-> `model.api-key` 支持 `${ENV_NAME}` 格式，从环境变量读取。
+`model.api-key` 支持 `${ENV_NAME}` 格式，从环境变量读取。
 
 ## 使用步骤
 
-### 1) 配置环境变量（示例）
+### 1) 配置环境变量
 
 ```bash
 export OPENAI_API_KEY="你的key"
@@ -70,39 +75,38 @@ CONF
 mvn clean compile
 ```
 
-### 4) 运行
+## 运行 Demo
 
-- 使用默认读取路径：
-
-```bash
-mvn exec:java
-```
-
-- 指定配置文件路径：
+### A. 运行翻译 Agent
 
 ```bash
-mvn exec:java -Dexec.args="config/agent.properties"
+mvn exec:java -Dexec.mainClass="com.example.agent.TranslationAgentDemo"
 ```
 
-## 运行示例
+指定配置文件：
 
-输入：
-
-```text
-你好，今天心情不错。
+```bash
+mvn exec:java -Dexec.mainClass="com.example.agent.TranslationAgentDemo" -Dexec.args="config/agent.properties"
 ```
 
-输出（示意）：
+### B. 运行通用对话 Agent
 
-```text
-Detected language : Chinese
-English output    : Hello, I'm in a good mood today.
+```bash
+mvn exec:java -Dexec.mainClass="com.example.agent.ChatAgentDemo"
 ```
 
-如果输入：
+指定配置文件：
 
-```text
-How are you?
+```bash
+mvn exec:java -Dexec.mainClass="com.example.agent.ChatAgentDemo" -Dexec.args="config/agent.properties"
 ```
 
-则 `English output` 会保持原句。
+## 通用对话 Agent 的工具能力
+
+`AgentTools` 提供以下工具：
+
+1. `searchWeb(query)`：调用 DuckDuckGo 即时答案接口进行联网搜索。
+2. `fetchUrl(url)`：读取指定 URL 的页面内容。
+3. `readLocalFile(filePath)`：读取本地文件内容。
+
+> 提示：如果你让 Agent “读取某个本地文件并总结”，它会自动调用 `readLocalFile`。
