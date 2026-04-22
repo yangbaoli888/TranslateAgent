@@ -1,6 +1,7 @@
 package com.example.agent;
 
 import dev.langchain4j.service.SystemMessage;
+import dev.langchain4j.service.TokenStream;
 import dev.langchain4j.service.UserMessage;
 
 public interface GeneralAssistantAgent {
@@ -12,5 +13,5 @@ public interface GeneralAssistantAgent {
             - 当用户要求查看本地内容时，调用本地文件读取工具。
             - 回答时请明确你是否使用了工具，以及关键结论。
             """)
-    String chat(@UserMessage String message);
+    TokenStream chat(@UserMessage String message);
 }

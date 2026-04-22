@@ -3,7 +3,7 @@
 本项目现在包含两个 Agent Demo：
 
 1. **翻译 Agent**：自动识别输入语言，并将输入转换成英文（若原文是英文则保持原样）。
-2. **通用对话 Agent**：支持多轮对话，具备联网工具与本地文件读取能力。
+2. **通用对话 Agent**：支持多轮对话，具备联网工具与本地文件读取能力，且回复为流式输出。
 
 > 两个 Demo 都支持通过配置文件自定义模型（OpenAI-Compatible 协议）。
 
@@ -89,7 +89,7 @@ mvn exec:java -Dexec.mainClass="com.example.agent.TranslationAgentDemo"
 mvn exec:java -Dexec.mainClass="com.example.agent.TranslationAgentDemo" -Dexec.args="config/agent.properties"
 ```
 
-### B. 运行通用对话 Agent
+### B. 运行通用对话 Agent（流式输出）
 
 ```bash
 mvn exec:java -Dexec.mainClass="com.example.agent.ChatAgentDemo"
@@ -110,3 +110,5 @@ mvn exec:java -Dexec.mainClass="com.example.agent.ChatAgentDemo" -Dexec.args="co
 3. `readLocalFile(filePath)`：读取本地文件内容。
 
 > 提示：如果你让 Agent “读取某个本地文件并总结”，它会自动调用 `readLocalFile`。
+
+聊天模式下回复会按 token 流式打印到终端。
