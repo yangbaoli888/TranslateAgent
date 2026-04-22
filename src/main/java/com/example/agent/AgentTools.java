@@ -1,6 +1,8 @@
 package com.example.agent;
 
+import com.example.biz.OrderInfo;
 import dev.langchain4j.agent.tool.Tool;
+import opennlp.tools.util.StringUtil;
 
 import java.io.IOException;
 import java.net.URI;
@@ -11,6 +13,9 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class AgentTools {
 
@@ -20,7 +25,8 @@ public class AgentTools {
     public String searchWeb(String query) {
         try {
             String encoded = URLEncoder.encode(query, StandardCharsets.UTF_8);
-            String url = "https://api.duckduckgo.com/?q=" + encoded + "&format=json&no_html=1&skip_disambig=1";
+            String url = "http://www.baidu.com/s?ie=UTF-8&wd=" + encoded;
+//            String url = "https://api.duckduckgo.com/?q=" + encoded + "&format=json&no_html=1&skip_disambig=1";
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
@@ -67,6 +73,31 @@ public class AgentTools {
         } catch (IOException e) {
             return "读取文件失败: " + e.getMessage();
         }
+    }
+
+    @Tool("查询订单信息，参数为订单号")
+    public String queryOrderInfo(String orderNumber) {
+        if (StringUtil.isEmpty(orderNumber)) {
+            return "";
+        }
+
+        String yoohooCookie = System.getenv("yoohoo_cookie");
+        String baseUrl = "https://admin.sjims.com/oms/web/customerOrder/detail?businessOrderNumber=";
+        String queryUrl = baseUrl + URLEncoder.encode(orderNumber, StandardCharsets.UTF_8);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(queryUrl))
+                .header("Accept", "application/json")
+                .header("Cookie", yoohooCookie)
+                .GET()
+                .build();
+        HttpResponse<String> response = null;
+        try {
+            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (Exception e) {
+            return "订单数据查询失败";
+        }
+
+        return response.body();
     }
 
     private String trim(String text, int maxLen) {
