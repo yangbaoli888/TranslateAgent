@@ -43,7 +43,10 @@ public final class ConfigLoader {
         String modelName = resolveValue(require(properties, "model.name"));
         Double temperature = Double.parseDouble(properties.getProperty("model.temperature", "0.0"));
 
-        return new ModelConfig(baseUrl, apiKey, modelName, temperature);
+        String caiYunToken = System.getenv("CAI_YUN_TOKEN");
+        String tavilyToken = System.getenv("TAVILY_TOKEN");
+        String yoohooCookie = System.getenv("yoohoo_cookie");
+        return new ModelConfig(baseUrl, apiKey, modelName, temperature, caiYunToken, tavilyToken, yoohooCookie);
     }
 
     private static String resolveValue(String value) {

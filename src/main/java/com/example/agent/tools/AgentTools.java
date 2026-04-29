@@ -1,6 +1,9 @@
-package com.example.agent;
+package com.example.agent.tools;
 
-import com.example.biz.OrderInfo;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
+import com.example.agent.ConfigLoader;
+import com.example.agent.ModelConfig;
 import dev.langchain4j.agent.tool.Tool;
 import opennlp.tools.util.StringUtil;
 
@@ -13,33 +16,11 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class AgentTools {
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
-
-    @Tool("使用 DuckDuckGo 即时答案接口进行简单联网搜索")
-    public String searchWeb(String query) {
-        try {
-            String encoded = URLEncoder.encode(query, StandardCharsets.UTF_8);
-            String url = "http://www.baidu.com/s?ie=UTF-8&wd=" + encoded;
-//            String url = "https://api.duckduckgo.com/?q=" + encoded + "&format=json&no_html=1&skip_disambig=1";
-
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .header("Accept", "application/json")
-                    .GET()
-                    .build();
-
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            return trim("DuckDuckGo raw response:\n" + response.body(), 3000);
-        } catch (Exception e) {
-            return "联网搜索失败: " + e.getMessage();
-        }
-    }
+    private static final ModelConfig config = ConfigLoader.load(new String[]{});
 
     @Tool("获取指定网页URL内容，适合在已知链接时联网读取")
     public String fetchUrl(String url) {
@@ -81,13 +62,12 @@ public class AgentTools {
             return "";
         }
 
-        String yoohooCookie = System.getenv("yoohoo_cookie");
         String baseUrl = "https://admin.sjims.com/oms/web/customerOrder/detail?businessOrderNumber=";
         String queryUrl = baseUrl + URLEncoder.encode(orderNumber, StandardCharsets.UTF_8);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(queryUrl))
                 .header("Accept", "application/json")
-                .header("Cookie", yoohooCookie)
+                .header("Cookie", config.YOOHOO_COOKIE())
                 .GET()
                 .build();
         HttpResponse<String> response = null;
@@ -98,6 +78,12 @@ public class AgentTools {
         }
 
         return response.body();
+    }
+
+    @Tool("获取当前位置的当前时间, 时间格式为'yyyy-MM-dd HH:mm:ss'")
+    public String currentTime() {
+        DateTime now = DateTime.now();
+        return DateUtil.formatDateTime(now);
     }
 
     private String trim(String text, int maxLen) {
