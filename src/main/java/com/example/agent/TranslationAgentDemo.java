@@ -1,5 +1,8 @@
 package com.example.agent;
 
+import com.example.agent.config.ConfigLoader;
+import com.example.agent.config.ModelConfig;
+import com.example.agent.pojo.TranslationResult;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.service.AiServices;

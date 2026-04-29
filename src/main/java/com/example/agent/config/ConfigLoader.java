@@ -1,4 +1,4 @@
-package com.example.agent;
+package com.example.agent.config;
 
 import java.io.IOException;
 import java.io.InputStream;

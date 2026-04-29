@@ -2,8 +2,8 @@ package com.example.agent.tools;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import com.example.agent.ConfigLoader;
-import com.example.agent.ModelConfig;
+import com.example.agent.config.ConfigLoader;
+import com.example.agent.config.ModelConfig;
 import dev.langchain4j.agent.tool.Tool;
 import lombok.extern.slf4j.Slf4j;
 

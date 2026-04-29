@@ -1,4 +1,4 @@
-package com.example.agent;
+package com.example.agent.pojo;
 
 /**
  * Agent返回的结构化结果。

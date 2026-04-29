@@ -1,5 +1,6 @@
 package com.example.agent;
 
+import com.example.agent.pojo.TranslationResult;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 

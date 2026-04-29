@@ -2,8 +2,8 @@ package com.example.agent.tools;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
-import com.example.agent.ConfigLoader;
-import com.example.agent.ModelConfig;
+import com.example.agent.config.ConfigLoader;
+import com.example.agent.config.ModelConfig;
 import dev.langchain4j.agent.tool.Tool;
 import opennlp.tools.util.StringUtil;
 

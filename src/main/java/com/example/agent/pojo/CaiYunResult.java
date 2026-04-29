@@ -1,4 +1,4 @@
-package com.example.biz;
+package com.example.agent.pojo;
 
 import lombok.Data;
 
