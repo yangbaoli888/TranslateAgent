@@ -32,6 +32,7 @@ public class ChatAgentDemo {
                 .build();
 
         System.out.println("=== Generic Chat Agent Demo (with web + file tools) ===");
+        System.out.println("Provider: " + config.provider());
         System.out.println("Model: " + config.modelName());
         System.out.println("请输入问题（输入 exit 退出）：");
 
