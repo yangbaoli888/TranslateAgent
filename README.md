@@ -5,7 +5,7 @@
 1. **翻译 Agent**：自动识别输入语言，并将输入转换成英文（若原文是英文则保持原样）。
 2. **通用对话 Agent**：支持多轮对话，具备联网工具与本地文件读取能力，且回复为流式输出。
 
-> 两个 Demo 都支持通过配置文件自定义模型（OpenAI-Compatible 协议）。
+> 两个 Demo 都支持通过配置文件自定义模型（OpenAI-Compatible 协议），并内置 DeepSeek 配置支持。
 
 ## 技术栈
 
@@ -41,6 +41,7 @@ src/main/resources/
 配置示例：
 
 ```properties
+model.provider=openai
 model.base-url=https://api.openai.com/v1
 model.api-key=${OPENAI_API_KEY}
 model.name=gpt-4o-mini
@@ -49,12 +50,31 @@ model.temperature=0.0
 
 `model.api-key` 支持 `${ENV_NAME}` 格式，从环境变量读取。
 
+新增 `model.provider`（可选，默认 `openai`）：
+
+- `openai`：默认 base-url 为 `https://api.openai.com/v1`
+- `deepseek`：默认 base-url 为 `https://api.deepseek.com/v1`
+
+当你显式配置了 `model.base-url` 时，会优先使用你填的地址。
+
 ## 使用步骤
+
+
+DeepSeek 配置示例：
+
+```properties
+model.provider=deepseek
+model.api-key=${DEEPSEEK_API_KEY}
+model.name=deepseek-chat
+model.temperature=0.3
+```
 
 ### 1) 配置环境变量
 
 ```bash
 export OPENAI_API_KEY="你的key"
+# 或
+export DEEPSEEK_API_KEY="你的key"
 ```
 
 ### 2) （可选）创建外部配置文件
@@ -62,6 +82,7 @@ export OPENAI_API_KEY="你的key"
 ```bash
 mkdir -p config
 cat > config/agent.properties <<'CONF'
+model.provider=openai
 model.base-url=https://api.openai.com/v1
 model.api-key=${OPENAI_API_KEY}
 model.name=gpt-4o-mini

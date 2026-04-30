@@ -38,7 +38,8 @@ public final class ConfigLoader {
     }
 
     private static ModelConfig toConfig(Properties properties) {
-        String baseUrl = resolveValue(require(properties, "model.base-url"));
+        String provider = properties.getProperty("model.provider", "openai").trim().toLowerCase();
+        String baseUrl = resolveValue(properties.getProperty("model.base-url", defaultBaseUrl(provider)).trim());
         String apiKey = resolveValue(require(properties, "model.api-key"));
         String modelName = resolveValue(require(properties, "model.name"));
         Double temperature = Double.parseDouble(properties.getProperty("model.temperature", "0.0"));
@@ -46,7 +47,14 @@ public final class ConfigLoader {
         String caiYunToken = System.getenv("CAI_YUN_TOKEN");
         String tavilyToken = System.getenv("TAVILY_TOKEN");
         String yoohooCookie = System.getenv("yoohoo_cookie");
-        return new ModelConfig(baseUrl, apiKey, modelName, temperature, caiYunToken, tavilyToken, yoohooCookie);
+        return new ModelConfig(provider, baseUrl, apiKey, modelName, temperature, caiYunToken, tavilyToken, yoohooCookie);
+    }
+
+    private static String defaultBaseUrl(String provider) {
+        return switch (provider) {
+            case "deepseek" -> "https://api.deepseek.com/v1";
+            default -> "https://api.openai.com/v1";
+        };
     }
 
     private static String resolveValue(String value) {

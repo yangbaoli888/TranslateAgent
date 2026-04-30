@@ -1,6 +1,7 @@
 package com.example.agent.config;
 
 public record ModelConfig(
+        String provider,
         String baseUrl,
         String apiKey,
         String modelName,
