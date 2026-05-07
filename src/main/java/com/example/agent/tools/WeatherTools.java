@@ -95,12 +95,12 @@ public class WeatherTools {
                 .getString("value");
 
         // 输出结果
-        System.out.println("温度：" + temp);
-        System.out.println("体感温度：" + feelTemp);
-        System.out.println("风速：" + windSpeed);
-        System.out.println("风向：" + windDir);
-        System.out.println("云量：" + cloudRate);
-        System.out.println("天气描述：" + weatherDesc);
+//        System.out.println("温度：" + temp);
+//        System.out.println("体感温度：" + feelTemp);
+//        System.out.println("风速：" + windSpeed);
+//        System.out.println("风向：" + windDir);
+//        System.out.println("云量：" + cloudRate);
+//        System.out.println("天气描述：" + weatherDesc);
 
         String template = "{\"温度\":\"%s\",\"体感温度\":\"%s\",\"风速\":\"%s\",\"风向\":\"%s\",\"云量\":\"%s\",\"天气描述\":\"%s\"}";
         return template.formatted(temp, feelTemp, windSpeed, windDir, cloudRate, weatherDesc);

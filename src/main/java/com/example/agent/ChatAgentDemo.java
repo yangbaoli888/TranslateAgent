@@ -5,10 +5,12 @@ import com.example.agent.config.ModelConfig;
 import com.example.agent.tools.AgentTools;
 import com.example.agent.tools.WeatherTools;
 import com.example.agent.tools.WebSearchTool;
+import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.service.AiServices;
 
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -24,10 +26,12 @@ public class ChatAgentDemo {
                 .apiKey(config.apiKey())
                 .modelName(config.modelName())
                 .temperature(config.temperature())
+                .customHeaders(Map.of("reasoning_effort", "low"))
                 .build();
 
         GeneralAssistantAgent agent = AiServices.builder(GeneralAssistantAgent.class)
                 .chatLanguageModel(model)
+                .chatMemory(MessageWindowChatMemory.withMaxMessages(20))
                 .tools(new AgentTools(), new WeatherTools(), new WebSearchTool())
                 .build();
 
